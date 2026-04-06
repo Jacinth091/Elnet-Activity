@@ -1,0 +1,20 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Sensitive configuration
+appsettings.Development.json
+
+# User-specific files
+.idea/
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
