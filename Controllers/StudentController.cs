@@ -1,9 +1,12 @@
-﻿using Barral_ELNET1_MVC.Data;
+using Barral_ELNET1_MVC.Data;
 using Barral_ELNET1_MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Barral_ELNET1_MVC.Controllers
 {
+    [Authorize]
     public class StudentController : Controller
     {
         private readonly AppDbContext _context;
@@ -13,69 +16,104 @@ namespace Barral_ELNET1_MVC.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(string? searchTerm, string? courseFilter)
         {
-            List<Student> students = _context.Students.ToList();
+            var query = _context.Students.AsQueryable();
+
+            // Search by name/email/id (case-insensitive)
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var normalizedSearch = searchTerm.Trim().ToLower();
+                var parsedId = int.TryParse(normalizedSearch, out var idValue);
+
+                query = query.Where(s =>
+                    s.Name.ToLower().Contains(normalizedSearch) ||
+                    s.Email.ToLower().Contains(normalizedSearch) ||
+                    (parsedId && s.Id == idValue));
+            }
+
+            // Filter by course/program
+            if (!string.IsNullOrWhiteSpace(courseFilter))
+            {
+                var normalizedCourse = courseFilter.Trim().ToLower();
+                query = query.Where(s => s.Course.ToLower() == normalizedCourse);
+            }
+
+            var students = await query
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+
+            var courseOptions = await _context.Students
+                .Select(s => s.Course)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.CourseFilter = courseFilter;
+            ViewBag.CourseOptions = courseOptions;
+
             return View(students);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Student student)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(Student student)
         {
             if (ModelState.IsValid)
             {
                 _context.Students.Add(student);
-                _context.SaveChanges();
-
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(student);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             var student = _context.Students.Find(id);
-
             if (student == null)
             {
                 return NotFound();
             }
-
             return View(student);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Student student)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(Student student)
         {
             if (ModelState.IsValid)
             {
                 _context.Students.Update(student);
-                _context.SaveChanges();
-
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(student);
         }
 
-
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var student = _context.Students.Find(id);
-
             if (student != null)
             {
                 _context.Students.Remove(student);
                 _context.SaveChanges();
             }
-
             return RedirectToAction("Index");
         }
     }
