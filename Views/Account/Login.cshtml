@@ -1,0 +1,62 @@
+@model Barral_ELNET1_MVC.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="text-center mb-4">
+                <i class="bi bi-mortarboard-fill text-secondary-muted" style="font-size: 3.5rem;"></i>
+                <h2 class="page-title mt-3">Portal Login</h2>
+                <p class="text-secondary-muted small">Enter your credentials to access admin features</p>
+            </div>
+
+            <div class="card p-4">
+                <form asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3 fw-bold"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-bold small text-navy">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope text-secondary-muted"></i></span>
+                            <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger x-small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label fw-bold small text-navy">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key text-secondary-muted"></i></span>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger x-small"></span>
+                    </div>
+
+                    <div class="mb-4 d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label small text-secondary-muted">Remember me</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3">
+                        Sign In <i class="bi bi-box-arrow-in-right ms-2"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a asp-controller="Home" asp-action="Index" class="text-decoration-none small fw-bold text-secondary-muted">
+                    <i class="bi bi-arrow-left me-1"></i> Return to Homepage
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
