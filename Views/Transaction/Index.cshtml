@@ -1,0 +1,78 @@
+@model IEnumerable<Barral_ELNET1_MVC.Models.Transaction>
+@{
+    ViewData["Title"] = "Transaction Log";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<div class="page-header d-flex justify-content-between align-items-end">
+    <div>
+        <h1 class="page-title mb-1">Transaction Log</h1>
+        <p class="text-muted mb-0">Record of all financial activities and student payments.</p>
+    </div>
+    @if (isAdmin)
+    {
+        <a asp-action="Create" class="btn btn-teal">
+            <i class="bi bi-plus-square-fill me-2"></i> New Transaction
+        </a>
+    }
+</div>
+
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="searchDesc" class="form-control border-start-0" 
+                       placeholder="Search by description..." value="@ViewBag.SearchDesc" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar3 text-muted"></i></span>
+                <input type="date" name="filterDate" class="form-control border-start-0" value="@ViewBag.FilterDate" />
+            </div>
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">Filter Logs</button>
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise"></i></a>
+        </div>
+    </form>
+</div>
+
+<div class="card overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Student Name</th>
+                    <th>Description</th>
+                    <th class="text-end">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-receipt fs-1 d-block mb-3 opacity-25"></i>
+                            No transactions found.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Date.ToString("MMM dd, yyyy")</td>
+                            <td class="fw-bold text-navy">@(item.Student?.Name ?? "Guest Student")</td>
+                            <td>@item.Description</td>
+                            <td class="text-end fw-bold text-teal">₱@item.Amount.ToString("N2")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
