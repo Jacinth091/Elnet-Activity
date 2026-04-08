@@ -1,0 +1,130 @@
+@model Barral_ELNET1_MVC.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="page-header">
+    <h1 class="page-title mb-1">Admin Dashboard</h1>
+    <p class="text-secondary-muted mb-0">Overview of student activity and system transactions.</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 border-start border-4 border-deep-blue">
+            <div class="d-flex align-items-center">
+                <div class="p-3 rounded me-3" style="background-color: var(--bg-primary);">
+                    <i class="bi bi-receipt text-navy fs-3"></i>
+                </div>
+                <div>
+                    <p class="text-secondary-muted small fw-bold mb-0">Total Transactions</p>
+                    <h3 class="mb-0 fw-bold text-navy">@Model.TotalTransactions</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 border-start border-4 border-teal">
+            <div class="d-flex align-items-center">
+                <div class="p-3 rounded me-3" style="background-color: var(--bg-primary);">
+                    <i class="bi bi-cash-stack text-secondary-muted fs-3"></i>
+                </div>
+                <div>
+                    <p class="text-secondary-muted small fw-bold mb-0">Collected Amount</p>
+                    <h3 class="mb-0 fw-bold text-navy">₱@Model.TotalAmount.ToString("N2")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 border-start border-4 border-cream">
+            <div class="d-flex align-items-center">
+                <div class="p-3 rounded me-3" style="background-color: var(--bg-primary);">
+                    <i class="bi bi-calendar-check text-navy fs-3"></i>
+                </div>
+                <div>
+                    <p class="text-secondary-muted small fw-bold mb-0">Transactions Today</p>
+                    <h3 class="mb-0 fw-bold text-navy">@Model.TodayTransactions</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-7">
+        <div class="card h-100">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-navy">Weekly Overview</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="weeklyChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card h-100">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-navy">Recent Activity</h5>
+                <a asp-controller="Transaction" asp-action="Index" class="btn btn-sm btn-outline-primary px-3">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    @foreach (var tx in Model.RecentTransactions)
+                    {
+                        <div class="list-group-item py-3">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-1 fw-bold text-navy">@tx.Description</h6>
+                                <span class="text-secondary-muted fw-bold">₱@tx.Amount.ToString("N2")</span>
+                            </div>
+                            <p class="mb-0 small text-secondary-muted">@tx.Date.ToString("MMM dd, yyyy")</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('weeklyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.ChartLabels)),
+                datasets: [{
+                    label: 'Transaction Amount (₱)',
+                    data: @Html.Raw(Json.Serialize(Model.AmountPerDay)),
+                    borderColor: '#5C5470',
+                    backgroundColor: 'rgba(92, 84, 112, 0.08)',
+                    tension: 0.3,
+                    fill: true,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#FAF0E6',
+                    pointBorderColor: '#5C5470',
+                    pointBorderWidth: 2,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(185, 180, 199, 0.15)' },
+                        ticks: { color: '#5C5470', font: { family: 'Poppins' } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#5C5470', font: { family: 'Poppins' } }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+}

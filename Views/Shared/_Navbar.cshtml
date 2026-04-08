@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg guest-navbar sticky-top py-3">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+            <i class="bi bi-mortarboard-fill fs-3 me-2 text-secondary-muted"></i>
+            <span class="fw-bold fs-4 tracking-tight text-navy">StudentHub</span>
+        </a>
+        
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#guestNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="guestNavbar">
+            <ul class="navbar-nav ms-auto gap-2">
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" 
+                       asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Student" ? "active" : "")" 
+                       asp-controller="Student" asp-action="Index">Directory</a>
+                </li>
+                <li class="nav-item ms-lg-3">
+                    <a class="btn btn-outline-primary px-4" asp-controller="Account" asp-action="Login">
+                        <i class="bi bi-lock-fill me-2"></i>Admin Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
