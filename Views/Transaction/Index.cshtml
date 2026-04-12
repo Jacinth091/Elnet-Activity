@@ -6,71 +6,85 @@
 
 <div class="page-header d-flex justify-content-between align-items-end">
     <div>
-        <h1 class="page-title mb-1">Transaction Log</h1>
-        <p class="text-muted mb-0">Record of all financial activities and student payments.</p>
+        <h1 class="page-title">Transaction Log</h1>
+        <p class="text-secondary-muted mb-0">
+            <i class="bi bi-receipt-cutoff me-2"></i>
+            Monitoring all financial activities and student payments.
+        </p>
     </div>
     @if (isAdmin)
     {
-        <a asp-action="Create" class="btn btn-teal">
-            <i class="bi bi-plus-square-fill me-2"></i> New Transaction
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-square-fill me-2"></i>New Transaction
         </a>
     }
 </div>
 
-<div class="card p-3 mb-4">
-    <form method="get" class="row g-2 align-items-center">
-        <div class="col-md-5">
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" name="searchDesc" class="form-control border-start-0" 
-                       placeholder="Search by description..." value="@ViewBag.SearchDesc" />
+<!-- Search & Filter Log -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label small text-uppercase fw-bold text-secondary-muted">Search Description</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="searchDesc" value="@ViewBag.SearchDesc" 
+                           class="form-control" placeholder="Search by description..." />
+                </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar3 text-muted"></i></span>
-                <input type="date" name="filterDate" class="form-control border-start-0" value="@ViewBag.FilterDate" />
+            <div class="col-md-4">
+                <label class="form-label small text-uppercase fw-bold text-secondary-muted">Filter by Date</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input type="date" name="filterDate" value="@ViewBag.FilterDate" class="form-control" />
+                </div>
             </div>
-        </div>
-        <div class="col-md-4 d-flex gap-2">
-            <button type="submit" class="btn btn-primary flex-grow-1">Filter Logs</button>
-            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise"></i></a>
-        </div>
-    </form>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">Filter</button>
+                <a asp-action="Index" class="btn btn-outline-secondary px-3"><i class="bi bi-arrow-counterclockwise"></i></a>
+            </div>
+        </form>
+    </div>
 </div>
 
-<div class="card overflow-hidden">
+<!-- Transaction Table -->
+<div class="card">
     <div class="table-responsive">
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Student Name</th>
+                    <th>Student Details</th>
                     <th>Description</th>
                     <th class="text-end">Amount</th>
                 </tr>
             </thead>
             <tbody>
-                @if (!Model.Any())
-                {
-                    <tr>
-                        <td colspan="4" class="text-center py-5 text-muted">
-                            <i class="bi bi-receipt fs-1 d-block mb-3 opacity-25"></i>
-                            No transactions found.
-                        </td>
-                    </tr>
-                }
-                else
+                @if (Model.Any())
                 {
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Date.ToString("MMM dd, yyyy")</td>
-                            <td class="fw-bold text-navy">@(item.Student?.Name ?? "Guest Student")</td>
+                            <td class="text-secondary-muted">@item.Date.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                <div class="fw-semibold">@(item.Student?.Name ?? "Guest Student")</div>
+                                <div class="x-small text-accent text-uppercase">@(item.Student?.Course ?? "General")</div>
+                            </td>
                             <td>@item.Description</td>
-                            <td class="text-end fw-bold text-teal">₱@item.Amount.ToString("N2")</td>
+                            <td class="text-end fw-bold text-navy">
+                                ₱@item.Amount.ToString("N2")
+                            </td>
                         </tr>
                     }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <i class="bi bi-inbox-fill display-4 text-accent d-block mb-3"></i>
+                            <p class="text-secondary-muted mb-0">No transaction logs match your filter criteria.</p>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
