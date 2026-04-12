@@ -1,6 +1,7 @@
 @model Barral_ELNET1_MVC.Models.Student
 @{
     ViewData["Title"] = "Edit Student";
+    var courses = ViewBag.CourseOptionsList as List<string> ?? new List<string>();
 }
 
 <div class="page-header">
@@ -40,7 +41,13 @@
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <label asp-for="Course" class="form-label fw-bold small text-navy">Program/Course</label>
-                        <input asp-for="Course" class="form-control" />
+                        <select asp-for="Course" class="form-select searchable-select">
+                            <option value="">Select Course</option>
+                            @foreach (var course in courses)
+                            {
+                                <option value="@course">@course</option>
+                            }
+                        </select>
                         <span asp-validation-for="Course" class="text-danger x-small"></span>
                     </div>
                     <div class="col-md-6">
@@ -61,4 +68,26 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.searchable-select').select2({
+                placeholder: "Select Course",
+                allowClear: true,
+                width: '100%'
+            });
+        });
+    </script>
+    <style>
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #B9B4C7;
+            border-radius: 6px;
+            height: 38px;
+            padding: 5px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+        }
+    </style>
 }

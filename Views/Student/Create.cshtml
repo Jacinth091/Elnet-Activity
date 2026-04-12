@@ -1,63 +1,108 @@
 @model Barral_ELNET1_MVC.Models.Student
+
 @{
     ViewData["Title"] = "Register Student";
+    var courses = ViewBag.CourseOptionsList as List<string> ?? new List<string>();
 }
 
 <div class="page-header">
-    <h1 class="page-title mb-1">Register New Student</h1>
-    <p class="text-muted mb-0">Complete the form below to add a new record to the directory.</p>
+    <h1 class="page-title">Register New Student</h1>
+    <p class="text-secondary-muted mb-0">Complete the form below to add a new record to the directory.</p>
 </div>
 
 <div class="row">
-    <div class="col-md-8 col-lg-6">
-        <div class="card p-4">
-            <h5 class="fw-bold text-navy mb-4"><i class="bi bi-person-badge me-2"></i> Personal Information</h5>
-            
-            <form asp-action="Create" method="post">
-                @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-navy"><i class="bi bi-person-badge me-2"></i> Registration Form</h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-12">
+                            <label asp-for="Name" class="form-label small text-uppercase fw-bold text-secondary-muted">Full Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter complete name" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
 
-                <div class="mb-3">
-                    <label asp-for="Name" class="form-label fw-bold small text-navy">Full Name</label>
-                    <input asp-for="Name" class="form-control" placeholder="Firstname Lastname" />
-                    <span asp-validation-for="Name" class="text-danger x-small"></span>
-                </div>
+                        <div class="col-md-7">
+                            <label asp-for="Email" class="form-label small text-uppercase fw-bold text-secondary-muted">Email Address</label>
+                            <input asp-for="Email" class="form-control" placeholder="name@university.edu" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="col-md-5">
+                            <label asp-for="Age" class="form-label small text-uppercase fw-bold text-secondary-muted">Age (18-60)</label>
+                            <input asp-for="Age" class="form-control" type="number" />
+                            <span asp-validation-for="Age" class="text-danger small"></span>
+                        </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-8">
-                        <label asp-for="Email" class="form-label fw-bold small text-navy">Email Address</label>
-                        <input asp-for="Email" class="form-control" placeholder="name@example.edu" />
-                        <span asp-validation-for="Email" class="text-danger x-small"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label asp-for="Age" class="form-label fw-bold small text-navy">Age</label>
-                        <input asp-for="Age" class="form-control" type="number" min="18" max="100" />
-                        <span asp-validation-for="Age" class="text-danger x-small"></span>
-                    </div>
-                </div>
+                        <div class="col-md-6">
+                            <label asp-for="Course" class="form-label small text-uppercase fw-bold text-secondary-muted">Course / Department</label>
+                            <select asp-for="Course" class="form-select searchable-select">
+                                <option value="">Select Department</option>
+                                @foreach (var course in courses)
+                                {
+                                    <option value="@course">@course</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Course" class="text-danger small"></span>
+                        </div>
 
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label asp-for="Course" class="form-label fw-bold small text-navy">Program/Course</label>
-                        <input asp-for="Course" class="form-control" placeholder="e.g., BSIT" />
-                        <span asp-validation-for="Course" class="text-danger x-small"></span>
+                        <div class="col-md-6">
+                            <label asp-for="BirthDate" class="form-label small text-uppercase fw-bold text-secondary-muted">Birth Date</label>
+                            <input asp-for="BirthDate" class="form-control" type="date" />
+                            <span asp-validation-for="BirthDate" class="text-danger small"></span>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="BirthDate" class="form-label fw-bold small text-navy">Birth Date</label>
-                        <input asp-for="BirthDate" class="form-control" type="date" />
-                        <span asp-validation-for="BirthDate" class="text-danger x-small"></span>
-                    </div>
-                </div>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-teal px-4">Save Student Record</button>
-                    <a asp-action="Index" class="btn btn-outline-secondary">Back to Directory</a>
-                </div>
-            </form>
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary px-5">Save Record</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mt-4 mt-lg-0">
+        <div class="card border-0 shadow-sm" style="background-color: var(--accent-soft);">
+            <div class="card-body p-4 text-navy">
+                <h6 class="fw-bold text-uppercase small mb-3">Validation Requirements</h6>
+                <ul class="list-unstyled small mb-0 d-grid gap-2">
+                    <li><i class="bi bi-check2-circle me-2"></i> Age must be between 18 and 60.</li>
+                    <li><i class="bi bi-check2-circle me-2"></i> Valid university email format.</li>
+                    <li><i class="bi bi-check2-circle me-2"></i> All personal fields are required.</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.searchable-select').select2({
+                placeholder: "Select Department",
+                allowClear: true,
+                width: '100%'
+            });
+        });
+    </script>
+    <style>
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #B9B4C7;
+            border-radius: 6px;
+            height: 38px;
+            padding: 5px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+        }
+    </style>
 }
