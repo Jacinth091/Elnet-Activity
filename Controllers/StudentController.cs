@@ -6,10 +6,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Barral_ELNET1_MVC.Controllers
 {
-    [Authorize]
     public class StudentController : Controller
     {
         private readonly AppDbContext _context;
+
+        // Static list of full course names
+        private readonly List<string> _fullCourseNames = new List<string>
+        {
+            "Bachelor of Science in Information Technology",
+            "Bachelor of Science in Computer Science",
+            "Bachelor of Science in Information Systems",
+            "Bachelor of Science in Accountancy",
+            "Bachelor of Science in Nursing",
+            "Bachelor of Science in Business Administration",
+            "Bachelor of Secondary Education"
+        };
 
         public StudentController(AppDbContext context)
         {
@@ -41,7 +52,7 @@ namespace Barral_ELNET1_MVC.Controllers
             }
 
             var students = await query
-                .OrderBy(s => s.Name)
+                .OrderBy(s => s.Id)
                 .ToListAsync();
 
             var courseOptions = await _context.Students
@@ -61,6 +72,7 @@ namespace Barral_ELNET1_MVC.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+            ViewBag.CourseOptionsList = _fullCourseNames;
             return View();
         }
 
@@ -75,6 +87,7 @@ namespace Barral_ELNET1_MVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.CourseOptionsList = _fullCourseNames;
             return View(student);
         }
 
@@ -86,6 +99,7 @@ namespace Barral_ELNET1_MVC.Controllers
             {
                 return NotFound();
             }
+            ViewBag.CourseOptionsList = _fullCourseNames;
             return View(student);
         }
 
@@ -100,6 +114,7 @@ namespace Barral_ELNET1_MVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.CourseOptionsList = _fullCourseNames;
             return View(student);
         }
 
