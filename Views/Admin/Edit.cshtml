@@ -1,0 +1,66 @@
+@model Barral_ELNET1_MVC.Models.User
+@{
+    ViewData["Title"] = "Edit Admin";
+}
+
+<div class="page-header">
+    <h1 class="page-title mb-1">Edit Administrator</h1>
+    <p class="text-muted mb-0">Update account details for @Model.Name.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-lg-6">
+        <div class="card p-4">
+            <h5 class="fw-bold text-navy mb-4"><i class="bi bi-pencil-fill me-2"></i> Update Information</h5>
+            
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="All" class="text-danger small mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label fw-bold small text-navy">Full Name</label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <label asp-for="Email" class="form-label fw-bold small text-navy">Email Address</label>
+                        <input asp-for="Email" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Age" class="form-label fw-bold small text-navy">Age</label>
+                        <input asp-for="Age" class="form-control" type="number" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="BirthDate" class="form-label fw-bold small text-navy">Birth Date</label>
+                    <input asp-for="BirthDate" class="form-control" type="date" />
+                </div>
+
+                <hr class="my-4 opacity-50">
+                <p class="text-muted small">Only fill out the password fields below if you want to change the password.</p>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label fw-bold small text-navy">New Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Leave blank to keep current password" />
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ConfirmPassword" class="form-label fw-bold small text-navy">Confirm New Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Leave blank to keep current password" />
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-teal px-4">Update Account</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
