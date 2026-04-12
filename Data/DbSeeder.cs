@@ -19,22 +19,38 @@ public static class DbSeeder
 
     private static void SeedUsers(AppDbContext context, ILogger? logger)
     {
-        // Avoid duplicates by unique email, not by table count only.
+        // Avoid duplicates by unique email
         if (!context.Users.Any(u => u.Email == "admin@example.com"))
         {
             context.Users.Add(new User
             {
-                Name = "System Administrator",
-                Age = 30,
+                Name = "Administrator",
                 Email = "admin@example.com",
-                BirthDate = DateOnly.FromDateTime(new DateTime(1996, 1, 1)),
+                BirthDate = DateOnly.FromDateTime(new DateTime(2000, 1, 1)),
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123"),
-                Role = "Admin"
+                Role = "Admin",
+                Age = 26
             });
 
-            context.SaveChanges();
             logger?.LogInformation("Seeded default admin user.");
         }
+
+        if (!context.Users.Any(u => u.Email == "guest@example.com"))
+        {
+            context.Users.Add(new User
+            {
+                Name = "Guest User",
+                Email = "guest@example.com",
+                BirthDate = DateOnly.FromDateTime(new DateTime(2002, 5, 10)),
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Guest123"),
+                Role = "Guest",
+                Age = 24
+            });
+
+            logger?.LogInformation("Seeded default guest user.");
+        }
+
+        context.SaveChanges();
     }
 
     private static void SeedStudents(AppDbContext context, ILogger? logger)
@@ -47,16 +63,26 @@ public static class DbSeeder
         // Keep values realistic and aligned with model constraints.
         var students = new List<Student>
         {
-            new() { Name = "Alyssa Cruz", Course = "BSIT", Age = 20, Email = "alyssa.cruz@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2005, 2, 10)) },
-            new() { Name = "Marco Reyes", Course = "BSCS", Age = 22, Email = "marco.reyes@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2003, 7, 4)) },
-            new() { Name = "Janelle Santos", Course = "BSIS", Age = 19, Email = "janelle.santos@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2006, 1, 25)) },
-            new() { Name = "Daniel Flores", Course = "BSIT", Age = 21, Email = "daniel.flores@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2004, 11, 9)) },
-            new() { Name = "Patricia Gomez", Course = "BSA", Age = 23, Email = "patricia.gomez@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2002, 5, 15)) },
-            new() { Name = "Kevin Ramos", Course = "BSEd", Age = 24, Email = "kevin.ramos@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2001, 12, 1)) },
-            new() { Name = "Angela Mendoza", Course = "BSN", Age = 20, Email = "angela.mendoza@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2005, 8, 20)) },
-            new() { Name = "John Velasco", Course = "BSCS", Age = 18, Email = "john.velasco@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2007, 3, 18)) },
-            new() { Name = "Christine Lim", Course = "BSBA", Age = 21, Email = "christine.lim@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2004, 9, 30)) },
-            new() { Name = "Nathan Aquino", Course = "BSIT", Age = 22, Email = "nathan.aquino@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2003, 6, 6)) }
+            new() { Name = "Alyssa Cruz", Course = "Bachelor of Science in Information Technology", Age = 20, Email = "alyssa.cruz@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2005, 2, 10)) },
+            new() { Name = "Marco Reyes", Course = "Bachelor of Science in Computer Science", Age = 22, Email = "marco.reyes@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2003, 7, 4)) },
+            new() { Name = "Janelle Santos", Course = "Bachelor of Science in Information Systems", Age = 19, Email = "janelle.santos@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2006, 1, 25)) },
+            new() { Name = "Daniel Flores", Course = "Bachelor of Science in Information Technology", Age = 21, Email = "daniel.flores@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2004, 11, 9)) },
+            new() { Name = "Patricia Gomez", Course = "Bachelor of Science in Accountancy", Age = 23, Email = "patricia.gomez@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2002, 5, 15)) },
+            new() { Name = "Kevin Ramos", Course = "Bachelor of Secondary Education", Age = 24, Email = "kevin.ramos@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2001, 12, 1)) },
+            new() { Name = "Angela Mendoza", Course = "Bachelor of Science in Nursing", Age = 20, Email = "angela.mendoza@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2005, 8, 20)) },
+            new() { Name = "John Velasco", Course = "Bachelor of Science in Computer Science", Age = 18, Email = "john.velasco@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2007, 3, 18)) },
+            new() { Name = "Christine Lim", Course = "Bachelor of Science in Business Administration", Age = 21, Email = "christine.lim@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2004, 9, 30)) },
+            new() { Name = "Nathan Aquino", Course = "Bachelor of Science in Information Technology", Age = 22, Email = "nathan.aquino@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2003, 6, 6)) },
+            new() { Name = "Sophia Loren", Course = "Bachelor of Science in Information Technology", Age = 20, Email = "sophia.loren@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2005, 3, 15)) },
+            new() { Name = "Liam Neeson", Course = "Bachelor of Science in Computer Science", Age = 22, Email = "liam.neeson@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2003, 8, 12)) },
+            new() { Name = "Emma Watson", Course = "Bachelor of Science in Information Systems", Age = 19, Email = "emma.watson@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2006, 2, 28)) },
+            new() { Name = "Chris Pratt", Course = "Bachelor of Science in Information Technology", Age = 21, Email = "chris.pratt@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2004, 12, 5)) },
+            new() { Name = "Gal Gadot", Course = "Bachelor of Science in Accountancy", Age = 23, Email = "gal.gadot@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2002, 6, 20)) },
+            new() { Name = "Tom Holland", Course = "Bachelor of Secondary Education", Age = 24, Email = "tom.holland@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2001, 1, 10)) },
+            new() { Name = "Zendaya Coleman", Course = "Bachelor of Science in Nursing", Age = 20, Email = "zendaya.coleman@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2005, 9, 25)) },
+            new() { Name = "Henry Cavill", Course = "Bachelor of Science in Computer Science", Age = 18, Email = "henry.cavill@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2007, 4, 12)) },
+            new() { Name = "Scarlett Johansson", Course = "Bachelor of Science in Business Administration", Age = 21, Email = "scarlett.j@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2004, 10, 5)) },
+            new() { Name = "Robert Downey", Course = "Bachelor of Science in Information Technology", Age = 22, Email = "rdj@studentapp.edu", BirthDate = DateOnly.FromDateTime(new DateTime(2003, 5, 22)) }
         };
 
         context.Students.AddRange(students);
@@ -99,7 +125,7 @@ public static class DbSeeder
         var startDate = DateTime.Today.AddDays(-30);
 
         // Seed enough records for dashboard and filter testing.
-        for (var i = 0; i < 18; i++)
+        for (var i = 0; i < 30; i++)
         {
             var student = students[random.Next(students.Count)];
             var description = descriptions[random.Next(descriptions.Length)];
