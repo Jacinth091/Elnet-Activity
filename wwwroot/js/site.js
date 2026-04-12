@@ -1,47 +1,51 @@
-// ═══════════════════════════════════════════════════════════════
-// Site JavaScript — Vanilla JS only (no jQuery for app logic)
-// ═══════════════════════════════════════════════════════════════
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    // ── Sidebar Toggle Mechanics ───────────────────────────────
+document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.getElementById('sidebar');
-    const closeBtn = document.getElementById('sidebarClose');
+    const sidebarToggle = document.getElementById('sidebarToggle');
 
     if (sidebar) {
-        // Click anywhere on the collapsed sidebar to expand it.
-        // We listen on the sidebar itself and only act when collapsed.
-        sidebar.addEventListener('click', function (e) {
-            if (sidebar.classList.contains('collapsed')) {
-                // If they clicked on a nav-link, let the browser navigate normally
-                if (e.target.closest('.nav-link-portal') || e.target.closest('.btn-logout')) {
-                    return;
-                }
+        // Remove init class to enable smooth transitions
+        setTimeout(() => {
+            sidebar.classList.remove('sidebar-init');
+        }, 10);
 
-                // Otherwise, they clicked empty space: expand the sidebar
-                e.preventDefault();
-                e.stopPropagation();
-                sidebar.classList.remove('collapsed');
+        // Desktop: Toggle Sidebar (Expand on click when collapsed, collapse on header click when expanded)
+        sidebar.addEventListener('click', function (e) {
+            if (window.innerWidth >= 992) {
+                const isCurrentlyCollapsed = this.classList.contains('collapsed');
+                const header = e.target.closest('.sidebar-header');
+
+                if (isCurrentlyCollapsed) {
+                    this.classList.remove('collapsed');
+                    localStorage.setItem('sidebar-expanded', 'true');
+                    e.stopPropagation();
+                } else if (header) {
+                    this.classList.add('collapsed');
+                    localStorage.setItem('sidebar-expanded', 'false');
+                    e.stopPropagation();
+                }
             }
         });
 
-        // Explicit collapse via the chevron button (only when expanded)
-        if (closeBtn) {
-            closeBtn.addEventListener('click', function (e) {
-                // Stop the click from bubbling to the sidebar (which would re-expand)
+        // Mobile: Toggle Sidebar 'show' class
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function (e) {
+                sidebar.classList.toggle('show');
                 e.stopPropagation();
-                e.preventDefault();
-                sidebar.classList.add('collapsed');
             });
         }
-    }
 
-    // ── Back to Top (smooth scroll) ────────────────────────────
-    var backToTopLinks = document.querySelectorAll('.footer-link[href="#"]');
-    backToTopLinks.forEach(function (link) {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Close sidebar when clicking anywhere outside
+        document.addEventListener('click', function (e) {
+            if (window.innerWidth < 992) {
+                if (sidebar.classList.contains('show') && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+                    sidebar.classList.remove('show');
+                }
+            } else {
+                if (!sidebar.classList.contains('collapsed') && !sidebar.contains(e.target)) {
+                    sidebar.classList.add('collapsed');
+                    localStorage.setItem('sidebar-expanded', 'false');
+                }
+            }
         });
-    });
+    }
 });

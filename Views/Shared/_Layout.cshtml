@@ -5,47 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - StudentHub</title>
     
-    <!-- Google Fonts: Poppins -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Bootstrap 5 & Icons -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Barral_ELNET1_MVC.styles.css" asp-append-version="true" />
 </head>
 <body>
+
     @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
     {
-        <div class="main-wrapper admin-portal">
-            <partial name="_Sidebar" />
+        <!-- Mobile Header (Admin) -->
+        <header class="admin-mobile-header d-lg-none bg-white border-bottom px-3 py-2 sticky-top d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link text-primary p-0 me-3" type="button" id="sidebarToggle">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
+                <span class="fw-bold text-primary">StudentHub</span>
+            </div>
+            <div class="user-avatar text-uppercase bg-primary text-white" style="width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">
+                @(User.Identity?.Name?[0] ?? 'U')
+            </div>
+        </header>
 
-            <main role="main" class="content-area">
-                @RenderBody()
-            </main>
+        <div class="main-wrapper">
+            @await Html.PartialAsync("_Sidebar")
+
+            <div class="content-area overflow-auto">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                
+                <main role="main">
+                    @RenderBody()
+                </main>
+                
+                <footer class="mt-5 pt-4 border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="mb-0 text-secondary-muted small">&copy; 2026 StudentHub Admin Portal. All rights reserved.</p>
+                        <div class="small">
+                            <a href="#" class="footer-link me-3">Privacy Policy</a>
+                            <a href="#" class="footer-link">Terms of Service</a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
         </div>
     }
     else
     {
-        <div class="guest-wrapper">
-            <partial name="_Navbar" />
-            
-            <main role="main" class="content-area">
-                <div class="container">
-                    @RenderBody()
-                </div>
-            </main>
+        <div class="guest-wrapper min-vh-100 d-flex flex-column">
+            @await Html.PartialAsync("_Navbar")
 
-            <partial name="_Footer" />
+            @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index")
+            {
+                @await Html.PartialAsync("_Header")
+            }
+
+            <div class="container py-5 flex-grow-1">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+
+            @await Html.PartialAsync("_Footer")
         </div>
     }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

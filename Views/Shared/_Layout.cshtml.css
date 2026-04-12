@@ -7,23 +7,24 @@ a.navbar-brand {
 }
 
 a {
-    color: var(--border-muted);
-    transition: color 0.15s ease;
+    color: var(--color-primary);
+    transition: var(--transition-base);
+    text-decoration: none;
 }
 
 a:hover {
-    color: var(--text-main);
+    color: var(--color-primary-dark);
 }
 
 .border-top {
-    border-top: 1px solid var(--accent-soft) !important;
+    border-top: 1px solid var(--color-border-alpha) !important;
 }
 .border-bottom {
-    border-bottom: 1px solid var(--accent-soft) !important;
+    border-bottom: 1px solid var(--color-border-alpha) !important;
 }
 
 .box-shadow {
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-sm);
 }
 
 button.accept-policy {

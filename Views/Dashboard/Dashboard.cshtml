@@ -1,84 +1,117 @@
+@using System.Text.Json
 @model Barral_ELNET1_MVC.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="page-header">
-    <h1 class="page-title mb-1">Admin Dashboard</h1>
-    <p class="text-secondary-muted mb-0">Overview of student activity and system transactions.</p>
-</div>
-
-<div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="card p-3 border-start border-4 border-deep-blue">
-            <div class="d-flex align-items-center">
-                <div class="p-3 rounded me-3" style="background-color: var(--bg-primary);">
-                    <i class="bi bi-receipt text-navy fs-3"></i>
-                </div>
-                <div>
-                    <p class="text-secondary-muted small fw-bold mb-0">Total Transactions</p>
-                    <h3 class="mb-0 fw-bold text-navy">@Model.TotalTransactions</h3>
-                </div>
-            </div>
-        </div>
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title">Admin Dashboard</h1>
+        <p class="text-secondary-muted mb-0">System overview and financial activity summary.</p>
     </div>
-    <div class="col-md-4">
-        <div class="card p-3 border-start border-4 border-teal">
-            <div class="d-flex align-items-center">
-                <div class="p-3 rounded me-3" style="background-color: var(--bg-primary);">
-                    <i class="bi bi-cash-stack text-secondary-muted fs-3"></i>
-                </div>
-                <div>
-                    <p class="text-secondary-muted small fw-bold mb-0">Collected Amount</p>
-                    <h3 class="mb-0 fw-bold text-navy">₱@Model.TotalAmount.ToString("N2")</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card p-3 border-start border-4 border-cream">
-            <div class="d-flex align-items-center">
-                <div class="p-3 rounded me-3" style="background-color: var(--bg-primary);">
-                    <i class="bi bi-calendar-check text-navy fs-3"></i>
-                </div>
-                <div>
-                    <p class="text-secondary-muted small fw-bold mb-0">Transactions Today</p>
-                    <h3 class="mb-0 fw-bold text-navy">@Model.TodayTransactions</h3>
-                </div>
-            </div>
-        </div>
+    <div class="text-end">
+        <span class="badge bg-light text-navy border px-3 py-2">
+            <i class="bi bi-clock-history me-2"></i>Last sync: @Model.LastUpdated.ToString("hh:mm tt")
+        </span>
     </div>
 </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-md-7">
-        <div class="card h-100">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold text-navy">Weekly Overview</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="weeklyChart" height="250"></canvas>
+<!-- KPI Summary Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="background-color: var(--accent-soft);">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="header-icon-box bg-white border-0 shadow-sm" style="width: 3rem; height: 3rem; font-size: 1.25rem;">
+                        <i class="bi bi-receipt-cutoff"></i>
+                    </div>
+                    <span class="small fw-bold text-uppercase opacity-75">Transactions</span>
+                </div>
+                <h2 class="display-6 fw-bold mb-0 text-navy">@Model.TotalTransactions</h2>
+                <p class="small mb-0 mt-2 opacity-75 fw-medium">Lifetime record count</p>
             </div>
         </div>
     </div>
-    <div class="col-md-5">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="background-color: var(--border-muted);">
+            <div class="card-body p-4 text-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="header-icon-box bg-white border-0 shadow-sm" style="width: 3rem; height: 3rem; font-size: 1.25rem; color: var(--border-muted);">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                    <span class="small fw-bold text-uppercase opacity-75 text-white">Total Revenue</span>
+                </div>
+                <h2 class="display-6 fw-bold mb-0">₱@Model.TotalAmount.ToString("N0")</h2>
+                <p class="small mb-0 mt-2 opacity-75 fw-medium">Consolidated payments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="background-color: var(--white);">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="header-icon-box bg-primary border-0 shadow-sm" style="width: 3rem; height: 3rem; font-size: 1.25rem; color: var(--white);">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <span class="small fw-bold text-uppercase text-secondary-muted">Today</span>
+                </div>
+                <h2 class="display-6 fw-bold mb-0 text-navy">@Model.TodayTransactions</h2>
+                <p class="small mb-0 mt-2 text-secondary-muted fw-medium">New activities recorded</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Activity Table -->
+    <div class="col-xl-8">
         <div class="card h-100">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-navy">Recent Activity</h5>
-                <a asp-controller="Transaction" asp-action="Index" class="btn btn-sm btn-outline-primary px-3">View All</a>
+                <h5 class="mb-0 fw-bold text-navy">Recent Financial Activity</h5>
+                <a asp-controller="Transaction" asp-action="Index" class="btn btn-sm btn-outline-secondary px-3">View All Logs</a>
             </div>
-            <div class="card-body p-0">
-                <div class="list-group list-group-flush">
-                    @foreach (var tx in Model.RecentTransactions)
-                    {
-                        <div class="list-group-item py-3">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="mb-1 fw-bold text-navy">@tx.Description</h6>
-                                <span class="text-secondary-muted fw-bold">₱@tx.Amount.ToString("N2")</span>
-                            </div>
-                            <p class="mb-0 small text-secondary-muted">@tx.Date.ToString("MMM dd, yyyy")</p>
-                        </div>
-                    }
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in Model.RecentTransactions.Take(5))
+                        {
+                            <tr>
+                                <td class="text-secondary-muted small">@t.Date.ToString("MMM dd")</td>
+                                <td class="fw-medium">@t.Description</td>
+                                <td class="text-end fw-bold text-navy">₱@t.Amount.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Charts -->
+    <div class="col-xl-4">
+        <div class="card h-100">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-navy">Daily Trends</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <label class="small text-uppercase fw-bold text-secondary-muted d-block mb-3">Volume Count</label>
+                    <div style="height: 180px;">
+                        <canvas id="transactionsCountChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <label class="small text-uppercase fw-bold text-secondary-muted d-block mb-3">Revenue (₱)</label>
+                    <div style="height: 180px;">
+                        <canvas id="amountChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,43 +121,48 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('weeklyChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
+        const labels = @Html.Raw(JsonSerializer.Serialize(Model.ChartLabels));
+        const countData = @Html.Raw(JsonSerializer.Serialize(Model.TransactionsPerDay));
+        const amountData = @Html.Raw(JsonSerializer.Serialize(Model.AmountPerDay));
+
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                y: { beginAtZero: true, ticks: { font: { size: 10 } } }
+            }
+        };
+
+        new Chart(document.getElementById('transactionsCountChart'), {
+            type: 'bar',
             data: {
-                labels: @Html.Raw(Json.Serialize(Model.ChartLabels)),
+                labels: labels,
                 datasets: [{
-                    label: 'Transaction Amount (₱)',
-                    data: @Html.Raw(Json.Serialize(Model.AmountPerDay)),
-                    borderColor: '#5C5470',
-                    backgroundColor: 'rgba(92, 84, 112, 0.08)',
-                    tension: 0.3,
-                    fill: true,
-                    borderWidth: 3,
-                    pointBackgroundColor: '#FAF0E6',
-                    pointBorderColor: '#5C5470',
-                    pointBorderWidth: 2,
-                    pointRadius: 5
+                    data: countData,
+                    backgroundColor: '#5C5470',
+                    borderRadius: 4
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(185, 180, 199, 0.15)' },
-                        ticks: { color: '#5C5470', font: { family: 'Poppins' } }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#5C5470', font: { family: 'Poppins' } }
-                    }
-                },
-                plugins: {
-                    legend: { display: false }
-                }
-            }
+            options: chartOptions
+        });
+
+        new Chart(document.getElementById('amountChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: amountData,
+                    borderColor: '#352F44',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    fill: true,
+                    backgroundColor: 'rgba(53, 47, 68, 0.05)'
+                }]
+            },
+            options: chartOptions
         });
     </script>
 }
