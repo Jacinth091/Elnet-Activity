@@ -14,7 +14,7 @@
         <a asp-controller="Student" asp-action="Index" class="btn btn-primary px-4 py-2">
             Explore Directory
         </a>
-        @if (!User.Identity.IsAuthenticated)
+        @if (User.Identity?.IsAuthenticated != true)
         {
             <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary px-4 py-2">
                 Admin Access
@@ -26,7 +26,7 @@
 <div class="row g-4">
     <div class="col-md-4">
         <div class="feature-card p-4 h-100">
-            <div class="header-icon-box mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; background-color: var(--bg-primary);">
+            <div class="header-icon-box mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; background-color: var(--color-tag-bg); color: var(--color-text-primary);">
                 <i class="bi bi-shield-lock"></i>
             </div>
             <h5 class="fw-bold text-navy mb-2">Role-Based Access</h5>
@@ -37,7 +37,7 @@
     </div>
     <div class="col-md-4">
         <div class="feature-card p-4 h-100">
-            <div class="header-icon-box mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; background-color: var(--bg-primary);">
+            <div class="header-icon-box mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; background-color: var(--color-tag-bg); color: var(--color-text-primary);">
                 <i class="bi bi-search"></i>
             </div>
             <h5 class="fw-bold text-navy mb-2">Advanced Filtering</h5>
@@ -48,7 +48,7 @@
     </div>
     <div class="col-md-4">
         <div class="feature-card p-4 h-100">
-            <div class="header-icon-box mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; background-color: var(--bg-primary);">
+            <div class="header-icon-box mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; background-color: var(--color-tag-bg); color: var(--color-text-primary);">
                 <i class="bi bi-graph-up-arrow"></i>
             </div>
             <h5 class="fw-bold text-navy mb-2">Dynamic Insights</h5>

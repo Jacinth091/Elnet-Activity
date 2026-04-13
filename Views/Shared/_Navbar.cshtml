@@ -1,8 +1,8 @@
-<nav class="navbar navbar-expand-lg guest-navbar sticky-top py-3">
+<nav class="navbar navbar-expand-lg navbar-dark guest-navbar sticky-top py-3">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
-            <i class="bi bi-mortarboard-fill fs-3 me-2 text-secondary-muted"></i>
-            <span class="fw-bold fs-4 tracking-tight text-navy">StudentHub</span>
+            <i class="bi bi-mortarboard-fill fs-3 me-2" style="color: var(--color-sidebar-text);"></i>
+            <span class="fw-bold fs-4 tracking-tight" style="color: var(--color-sidebar-text-active);">StudentHub</span>
         </a>
         
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#guestNavbar">
@@ -20,7 +20,7 @@
                        asp-controller="Student" asp-action="Index">Directory</a>
                 </li>
                 <li class="nav-item ms-lg-3">
-                    <a class="btn btn-outline-primary px-4" asp-controller="Account" asp-action="Login">
+                    <a class="btn btn-secondary px-4" asp-controller="Account" asp-action="Login">
                         <i class="bi bi-lock-fill me-2"></i>Admin Login
                     </a>
                 </li>
