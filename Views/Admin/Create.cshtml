@@ -8,59 +8,68 @@
     <p class="text-secondary-muted mb-0">Create new administrative accounts for system management.</p>
 </div>
 
-<div class="row">
-    <div class="col-md-8 col-lg-6">
-        <div class="card p-4">
-            <h5 class="fw-bold text-navy mb-4"><i class="bi bi-person-plus me-2"></i> Admin Details</h5>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex align-items-center mb-4">
+                <div class="p-2 rounded-3 me-3" style="background-color: var(--color-tag-bg);">
+                    <i class="bi bi-person-plus fs-4 text-navy"></i>
+                </div>
+                <h3 class="h4 mb-0 fw-bold text-navy">Admin Details</h3>
+            </div>
             
             <form asp-action="Create" method="post">
                 @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                <div asp-validation-summary="ModelOnly" class="p-3 mb-4 w-100"></div>
 
                 <div class="mb-3">
-                    <label asp-for="Name" class="form-label fw-bold small text-navy">Full Name</label>
+                    <label asp-for="Name" class="form-label small text-uppercase fw-bold text-secondary-muted">Full Name</label>
                     <input asp-for="Name" class="form-control" placeholder="Enter admin's full name" />
-                    <span asp-validation-for="Name" class="text-danger x-small"></span>
+                    <span asp-validation-for="Name" class="d-block small mt-1"></span>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-8">
-                        <label asp-for="Email" class="form-label fw-bold small text-navy">Email Address</label>
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label asp-for="Email" class="form-label small text-uppercase fw-bold text-secondary-muted">Email Address</label>
                         <input asp-for="Email" class="form-control" placeholder="admin@example.com" />
-                        <span asp-validation-for="Email" class="text-danger x-small"></span>
+                        <span asp-validation-for="Email" class="d-block small mt-1"></span>
                     </div>
-                    <div class="col-md-4">
-                        <label asp-for="Age" class="form-label fw-bold small text-navy">Age</label>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Age" class="form-label small text-uppercase fw-bold text-secondary-muted">Age</label>
                         <input asp-for="Age" class="form-control" type="number" />
-                        <span asp-validation-for="Age" class="text-danger x-small"></span>
+                        <span asp-validation-for="Age" class="d-block small mt-1"></span>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="BirthDate" class="form-label fw-bold small text-navy">Birth Date</label>
+                    <label asp-for="BirthDate" class="form-label small text-uppercase fw-bold text-secondary-muted">Birth Date</label>
                     <input asp-for="BirthDate" class="form-control" type="date" />
-                    <span asp-validation-for="BirthDate" class="text-danger x-small"></span>
+                    <span asp-validation-for="BirthDate" class="d-block small mt-1"></span>
                 </div>
 
-                <hr class="my-4 opacity-50">
+                <hr class="my-4 opacity-50" style="border-color: var(--color-border-divider);">
 
                 <div class="mb-3 position-relative">
-                    <label asp-for="Password" class="form-label fw-bold small text-navy">Account Password</label>
-                    <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
-                    <i class="bi bi-eye-slash toggle-password-icon" style="cursor: pointer; position: absolute; right: 10px; top: 38px;"></i>
-                    <span asp-validation-for="Password" class="text-danger x-small"></span>
+                    <label asp-for="Password" class="form-label small text-uppercase fw-bold text-secondary-muted">Account Password</label>
+                    <input asp-for="Password" type="password" class="form-control pe-5" placeholder="••••••••" />
+                    <i class="bi bi-eye-slash toggle-password-icon" style="cursor: pointer; position: absolute; right: 14px; top: 38px; color: var(--color-text-muted);"></i>
+                    <span asp-validation-for="Password" class="d-block small mt-1"></span>
                 </div>
 
                 <div class="mb-4 position-relative">
-                    <label asp-for="ConfirmPassword" class="form-label fw-bold small text-navy">Confirm Password</label>
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="••••••••" />
-                    <i class="bi bi-eye-slash toggle-password-icon" style="cursor: pointer; position: absolute; right: 10px; top: 38px;"></i>
-                    <span asp-validation-for="ConfirmPassword" class="text-danger x-small"></span>
+                    <label asp-for="ConfirmPassword" class="form-label small text-uppercase fw-bold text-secondary-muted">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control pe-5" placeholder="••••••••" />
+                    <i class="bi bi-eye-slash toggle-password-icon" style="cursor: pointer; position: absolute; right: 14px; top: 38px; color: var(--color-text-muted);"></i>
+                    <span asp-validation-for="ConfirmPassword" class="d-block small mt-1"></span>
                 </div>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary px-4">Create Admin Account</button>
-                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-cancel">Cancel</a>
+                <div class="mt-4 pt-3 border-top d-flex gap-2">
+                    <button type="submit" class="btn btn-primary px-4 d-flex align-items-center">
+                        <i class="bi bi-check2-circle me-2"></i> Create Admin Account
+                    </button>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-cancel ms-auto">
+                        Cancel
+                    </a>
                 </div>
             </form>
         </div>
