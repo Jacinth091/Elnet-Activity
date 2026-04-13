@@ -23,7 +23,8 @@ namespace Barral_ELNET1_MVC.Controllers
         public async Task<IActionResult> Index()
         {
             var admins = await _context.Users.Where(u => u.Role == "Admin").ToListAsync();
-            ViewBag.CurrentAdminId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewBag.CurrentAdminId = int.TryParse(nameIdentifier, out int id) ? id : 0;
             return View(admins);
         }
 
@@ -138,8 +139,9 @@ namespace Barral_ELNET1_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var currentAdminId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (id == currentAdminId)
+            var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentAdminId = int.TryParse(nameIdentifier, out int cid) ? id : 0;
+            if (id == cid)
             {
                 TempData["Error"] = "Error: You cannot delete your own account.";
                 return RedirectToAction(nameof(Index));

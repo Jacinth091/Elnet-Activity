@@ -14,7 +14,7 @@ namespace Barral_ELNET1_MVC.Models
 
         [Required(ErrorMessage = "Please provide a brief description.")]
         [StringLength(250, ErrorMessage = "Description cannot exceed 250 characters.")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Transaction amount is required.")]
         [Range(0.01, 1000000.00, ErrorMessage = "Amount must be between 0.01 and 1,000,000.")]
