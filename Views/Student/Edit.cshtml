@@ -22,18 +22,18 @@
             <form asp-action="Edit" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
-                <div asp-validation-summary="ModelOnly" class="p-3 mb-4 w-100"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger p-3 mb-4 w-100"></div>
 
                 <div class="mb-3">
                    <label asp-for="Name" class="form-label small text-uppercase fw-bold text-secondary-muted">Full Name</label>
                     <input asp-for="Name" class="form-control" placeholder="e.g. Juan Dela Cruz" />
-                    <span asp-validation-for="Name" class="d-block small mt-1"></span>
+                    <span asp-validation-for="Name" class="text-danger d-block small mt-1"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Email" class="form-label small text-uppercase fw-bold text-secondary-muted">Email Address</label>
                     <input asp-for="Email" class="form-control" placeholder="juan@university.edu.ph" />
-                    <span asp-validation-for="Email" class="d-block small mt-1"></span>
+                    <span asp-validation-for="Email" class="text-danger d-block small mt-1"></span>
                 </div>
                 <div class="mb-3">
                     <label asp-for="Course" class="form-label small text-uppercase fw-bold text-secondary-muted">Course / Department</label>
@@ -44,25 +44,25 @@
                             <option value="@course">@course</option>
                         }
                     </select>
-                    <span asp-validation-for="Course" class="d-block small mt-1"></span>
+                    <span asp-validation-for="Course" class="text-danger d-block small mt-1"></span>
                 </div>
                 <div class="row mb-4">
                     <div class="col-sm-12 col-md-6 mb-3 mb-md-0">
                         <label asp-for="Age" class="form-label small text-uppercase fw-bold text-secondary-muted">Age (18-60)</label>
                         <input asp-for="Age" class="form-control" type="number" />
-                        <span asp-validation-for="Age" class="d-block small mt-1"></span>
+                        <span asp-validation-for="Age" class="text-danger d-block small mt-1"></span>
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <label asp-for="BirthDate" class="form-label small text-uppercase fw-bold text-secondary-muted">Birth Date</label>
                         <input asp-for="BirthDate" class="form-control" type="date" />
-                        <span asp-validation-for="BirthDate" class="d-block small mt-1"></span>
+                        <span asp-validation-for="BirthDate" class="text-danger d-block small mt-1"></span>
                     </div>
                 </div>
                 <div class="mt-4 pt-3 border-top d-flex flex-wrap gap-2">
-                    <button type="submit" class="btn btn-primary px-4 d-flex align-items-center">
+                    <button type="submit" class="btn btn-success px-4 d-flex align-items-center">
                         <i class="bi bi-check2-circle me-2"></i> Update Record
                     </button>
-                    <a asp-action="Index" class="btn btn-cancel ms-md-auto w-100 w-md-auto mt-2 mt-md-0">
+                    <a asp-action="Index" class="btn btn-secondary ms-md-auto w-100 w-md-auto mt-2 mt-md-0">
                         Cancel
                     </a>
                 </div>

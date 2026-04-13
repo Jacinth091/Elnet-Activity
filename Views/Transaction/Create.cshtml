@@ -20,20 +20,20 @@
             
             <form asp-action="Create" method="post">
                 @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="p-3 mb-4 w-100"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger p-3 mb-4 w-100"></div>
 
                 <div class="mb-3">
                     <label asp-for="StudentId" class="form-label small text-uppercase fw-bold text-secondary-muted">Select Student</label>
                     <select asp-for="StudentId" class="form-select searchable-select" asp-items="ViewBag.Students">
                         <option value="">-- Choose a student --</option>
                     </select>
-                    <span asp-validation-for="StudentId" class="d-block small mt-1"></span>
+                    <span asp-validation-for="StudentId" class="text-danger d-block small mt-1"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Description" class="form-label small text-uppercase fw-bold text-secondary-muted">Description</label>
                     <input asp-for="Description" class="form-control" placeholder="e.g., Tuition Fee Payment" />
-                    <span asp-validation-for="Description" class="d-block small mt-1"></span>
+                    <span asp-validation-for="Description" class="text-danger d-block small mt-1"></span>
                 </div>
 
                 <div class="row mb-4">
@@ -43,20 +43,20 @@
                             <span class="input-group-text bg-light text-navy">₱</span>
                             <input asp-for="Amount" class="form-control" type="number" step="0.01" />
                         </div>
-                        <span asp-validation-for="Amount" class="d-block small mt-1"></span>
+                        <span asp-validation-for="Amount" class="text-danger d-block small mt-1"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Date" class="form-label small text-uppercase fw-bold text-secondary-muted">Payment Date</label>
                         <input asp-for="Date" class="form-control" type="date" />
-                        <span asp-validation-for="Date" class="d-block small mt-1"></span>
+                        <span asp-validation-for="Date" class="text-danger d-block small mt-1"></span>
                     </div>
                 </div>
 
                 <div class="mt-4 pt-3 border-top d-flex gap-2">
-                    <button type="submit" class="btn btn-primary px-4 d-flex align-items-center">
+                    <button type="submit" class="btn btn-success px-4 d-flex align-items-center">
                         <i class="bi bi-check2-circle me-2"></i> Record Transaction
                     </button>
-                    <a asp-action="Index" class="btn btn-cancel ms-auto">
+                    <a asp-action="Index" class="btn btn-secondary ms-auto">
                         Cancel
                     </a>
                 </div>
