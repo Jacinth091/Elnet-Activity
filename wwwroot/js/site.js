@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
+    const mobileToggle = document.getElementById('mobileSidebarToggle');
+    const overlay = document.getElementById('sidebarOverlay');
 
     if (sidebar) {
         // Remove init class to enable smooth transitions
@@ -26,26 +27,32 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Mobile: Toggle Sidebar 'show' class
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function (e) {
+        // Mobile: Toggle Sidebar
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', function (e) {
                 sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
                 e.stopPropagation();
             });
         }
 
-        // Close sidebar when clicking anywhere outside
-        document.addEventListener('click', function (e) {
-            if (window.innerWidth < 992) {
-                if (sidebar.classList.contains('show') && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+        // Close sidebar when clicking overlay
+        if (overlay) {
+            overlay.addEventListener('click', function () {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            });
+        }
+
+        // Close sidebar when clicking links on mobile
+        const navLinks = sidebar.querySelectorAll('.nav-link-portal');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 992) {
                     sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
                 }
-            } else {
-                if (!sidebar.classList.contains('collapsed') && !sidebar.contains(e.target)) {
-                    sidebar.classList.add('collapsed');
-                    localStorage.setItem('sidebar-expanded', 'false');
-                }
-            }
+            });
         });
     }
 });

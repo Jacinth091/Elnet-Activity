@@ -506,14 +506,109 @@ small {
 }
 
 /* ── Responsive ────────────────────────────────────────────────── */
-@media (max-width: 991px) {
+/* ── Responsive Overrides ── */
+
+/* ── Mobile Bug Fixes ── */
+@media (max-width: 991.98px) {
+    /* Bug 1: Force labels to be visible in mobile drawer even if desktop state is collapsed */
+    .portal-sidebar.collapsed .label-visible {
+        opacity: 1 !important;
+        visibility: visible !important;
+        position: static !important;
+    }
+
+    /* Bug 2: Remove border and shadow for a flush, seamless navbar on mobile */
+    .guest-navbar,
+    .mobile-header {
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Tablet & Mobile (under 992px) */
+@media (max-width: 991.98px) {
+    .content-area {
+        padding: 1.5rem !important; /* Reduced to 24px (8px multiple) */
+    }
+
     .portal-sidebar {
-        position: fixed;
-        left: -100%;
-        transition: left 250ms ease;
+        position: fixed !important;
+        left: -280px !important; /* Start off-screen */
+        top: 0;
+        bottom: 0;
+        z-index: 1050;
+        width: 280px !important;
+        transition: left 0.3s ease !important;
     }
 
     .portal-sidebar.show {
+        left: 0 !important;
+        box-shadow: 4px 0 16px rgba(53, 47, 68, 0.2);
+    }
+
+    /* Prevent content overlap with fixed sidebar if needed, 
+       but here we use an overlay approach */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
         left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(53, 47, 68, 0.5);
+        z-index: 1040;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    .mobile-header {
+        display: flex !important;
+        background-color: var(--color-sidebar-bg);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+    }
+
+    .footer-link {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Mobile Small (under 576px) */
+@media (max-width: 575.98px) {
+    .content-area {
+        padding: 1rem !important; /* Reduced to 16px (8px multiple) */
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+
+    .page-header .btn {
+        width: 100%;
+    }
+
+    .card {
+        padding: 1rem !important;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .mobile-header {
+        display: none !important;
     }
 }
