@@ -34,11 +34,11 @@
         <div class="main-wrapper">
             @await Html.PartialAsync("_Sidebar")
 
-            <div class="content-area overflow-auto">
+            <div class="content-area flex-grow-1 overflow-auto">
                 @if (TempData["Success"] != null)
                 {
-                    <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
-                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                    <div class="alert alert-success alert-dismissible fade show mb-4 border-0" style="background-color: var(--color-tag-bg); color: var(--color-text-primary); border-radius: 10px; box-shadow: 0 2px 8px rgba(53, 47, 68, 0.06);" role="alert">
+                        <i class="bi bi-check-circle-fill me-2" style="color: var(--color-btn-primary-bg);"></i> @TempData["Success"]
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 }
@@ -47,7 +47,7 @@
                     @RenderBody()
                 </main>
                 
-                <footer class="mt-5 pt-4 border-top">
+                <footer class="mt-5 pt-4 border-top" style="border-color: var(--color-border-divider) !important;">
                     <div class="d-flex justify-content-between align-items-center">
                         <p class="mb-0 text-secondary-muted small">&copy; 2026 StudentHub Admin Portal. All rights reserved.</p>
                         <div class="small">
