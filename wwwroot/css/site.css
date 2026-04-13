@@ -195,43 +195,10 @@ small {
 }
 
 /* ── Layout ────────────────────────────────────────────────────── */
-.main-wrapper {
-    display: flex;
-    min-height: 100vh;
-    overflow: hidden;
-}
-
-.content-area {
-    padding: 2.5rem;
-    background-color: var(--color-page-bg);
-    transition: all 0.2s ease;
-    flex-grow: 1;
-    overflow-y: auto;
-    height: 100vh;
-}
+/* Legacy main-wrapper and content-area removed to fix grid scroll bug */
 
 /* ── Sidebar ───────────────────────────────────────────────────── */
-.portal-sidebar {
-    background-color: var(--color-sidebar-bg);
-    height: 100vh;
-    width: 280px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    transition: width 0.2s ease;
-    will-change: width;
-    overflow-x: hidden;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.portal-sidebar.sidebar-init { transition: none !important; }
-.portal-sidebar.sidebar-init * { transition: none !important; }
-
-.portal-sidebar.collapsed { width: 70px; }
-
-.sidebar-header { cursor: pointer; }
+/* Legacy portal-sidebar styles removed to fix grid scroll bug */
 
 .nav-link-portal {
     display: flex;
