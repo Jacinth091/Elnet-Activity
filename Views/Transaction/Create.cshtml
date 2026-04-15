@@ -5,51 +5,60 @@
 
 <div class="page-header">
     <h1 class="page-title mb-1">New Transaction</h1>
-    <p class="text-muted mb-0">Record a new payment or financial activity.</p>
+    <p class="text-secondary-muted mb-0">Record a new payment or financial activity.</p>
 </div>
 
-<div class="row">
-    <div class="col-md-8 col-lg-6">
-        <div class="card p-4">
-            <h5 class="fw-bold text-navy mb-4"><i class="bi bi-cash-stack me-2"></i> Transaction Details</h5>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex align-items-center mb-4">
+                <div class="p-2 rounded-3 me-3" style="background-color: var(--color-tag-bg);">
+                    <i class="bi bi-cash-stack fs-4 text-navy"></i>
+                </div>
+                <h3 class="h4 mb-0 fw-bold text-navy">Transaction Details</h3>
+            </div>
             
             <form asp-action="Create" method="post">
                 @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                <div asp-validation-summary="ModelOnly" class="p-3 mb-4 w-100"></div>
 
                 <div class="mb-3">
-                    <label asp-for="StudentId" class="form-label fw-bold small text-navy">Select Student</label>
-                    <select asp-for="StudentId" class="form-select" asp-items="ViewBag.Students">
+                    <label asp-for="StudentId" class="form-label small text-uppercase fw-bold text-secondary-muted">Select Student</label>
+                    <select asp-for="StudentId" class="form-select searchable-select" asp-items="ViewBag.Students">
                         <option value="">-- Choose a student --</option>
                     </select>
-                    <span asp-validation-for="StudentId" class="text-danger x-small"></span>
+                    <span asp-validation-for="StudentId" class="d-block small mt-1"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Description" class="form-label fw-bold small text-navy">Description</label>
+                    <label asp-for="Description" class="form-label small text-uppercase fw-bold text-secondary-muted">Description</label>
                     <input asp-for="Description" class="form-control" placeholder="e.g., Tuition Fee Payment" />
-                    <span asp-validation-for="Description" class="text-danger x-small"></span>
+                    <span asp-validation-for="Description" class="d-block small mt-1"></span>
                 </div>
 
                 <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label asp-for="Amount" class="form-label fw-bold small text-navy">Amount (₱)</label>
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label asp-for="Amount" class="form-label small text-uppercase fw-bold text-secondary-muted">Amount (₱)</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light">₱</span>
+                            <span class="input-group-text bg-light text-navy">₱</span>
                             <input asp-for="Amount" class="form-control" type="number" step="0.01" />
                         </div>
-                        <span asp-validation-for="Amount" class="text-danger x-small"></span>
+                        <span asp-validation-for="Amount" class="d-block small mt-1"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Date" class="form-label fw-bold small text-navy">Payment Date</label>
+                        <label asp-for="Date" class="form-label small text-uppercase fw-bold text-secondary-muted">Payment Date</label>
                         <input asp-for="Date" class="form-control" type="date" />
-                        <span asp-validation-for="Date" class="text-danger x-small"></span>
+                        <span asp-validation-for="Date" class="d-block small mt-1"></span>
                     </div>
                 </div>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-teal px-4">Record Transaction</button>
-                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <div class="mt-4 pt-3 border-top d-flex gap-2">
+                    <button type="submit" class="btn btn-primary px-4 d-flex align-items-center">
+                        <i class="bi bi-check2-circle me-2"></i> Record Transaction
+                    </button>
+                    <a asp-action="Index" class="btn btn-cancel ms-auto">
+                        Cancel
+                    </a>
                 </div>
             </form>
         </div>
@@ -58,4 +67,33 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.searchable-select').select2({
+                placeholder: "-- Choose a student --",
+                allowClear: true,
+                width: '100%'
+            });
+        });
+    </script>
+    <style>
+        .select2-container--default .select2-selection--single {
+            border: 1.5px solid var(--color-border-input) !important;
+            border-radius: 6px !important;
+            height: 44px !important;
+            padding: 6px 14px !important;
+            background-color: var(--color-surface) !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 42px !important;
+            right: 10px !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 28px !important;
+            color: var(--color-text-primary) !important;
+            padding-left: 0 !important;
+        }
+    </style>
 }

@@ -9,10 +9,10 @@ namespace Barral_ELNET1_MVC.Models
 
         [Required(ErrorMessage = "Full Name is required.")]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 100 characters.")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Course selection is required.")]
-        public string Course { get; set; }
+        public string Course { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Age is required.")]
         [Range(18, 60, ErrorMessage = "Age must be between 18 and 60.")]
@@ -20,7 +20,7 @@ namespace Barral_ELNET1_MVC.Models
 
         [Required(ErrorMessage = "Email address is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Birth Date is required.")]
         [DataType(DataType.Date)]

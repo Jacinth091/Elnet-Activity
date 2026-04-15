@@ -1,4 +1,4 @@
-﻿using Barral_ELNET1_MVC.Models;
+using Barral_ELNET1_MVC.Models;
 using Microsoft.EntityFrameworkCore;
 namespace Barral_ELNET1_MVC.Data
 {
@@ -19,3 +19,4 @@ namespace Barral_ELNET1_MVC.Data
         }
     }
 }
+

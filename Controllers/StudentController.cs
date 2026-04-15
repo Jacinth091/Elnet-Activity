@@ -1,4 +1,4 @@
-using Barral_ELNET1_MVC.Data;
+﻿using Barral_ELNET1_MVC.Data;
 using Barral_ELNET1_MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,7 @@ namespace Barral_ELNET1_MVC.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Guest")]
         public async Task<IActionResult> Index(string? searchTerm, string? courseFilter)
         {
             var query = _context.Students.AsQueryable();
@@ -81,10 +81,16 @@ namespace Barral_ELNET1_MVC.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Student student)
         {
+            if (await _context.Students.AnyAsync(s => s.Name == student.Name))
+            {
+                ModelState.AddModelError("Name", "A student with this name already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Students.Add(student);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Student record created successfully.";
                 return RedirectToAction("Index");
             }
             ViewBag.CourseOptionsList = _fullCourseNames;
@@ -108,10 +114,16 @@ namespace Barral_ELNET1_MVC.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Student student)
         {
+            if (await _context.Students.AnyAsync(s => s.Name == student.Name && s.Id != student.Id))
+            {
+                ModelState.AddModelError("Name", "A student with this name already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Students.Update(student);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Student record updated successfully.";
                 return RedirectToAction("Index");
             }
             ViewBag.CourseOptionsList = _fullCourseNames;
@@ -128,6 +140,11 @@ namespace Barral_ELNET1_MVC.Controllers
             {
                 _context.Students.Remove(student);
                 _context.SaveChanges();
+                TempData["Success"] = "Student record deleted successfully.";
+            }
+            else
+            {
+                TempData["Error"] = "Error: Student record not found.";
             }
             return RedirectToAction("Index");
         }

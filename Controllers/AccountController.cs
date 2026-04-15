@@ -38,6 +38,12 @@ namespace Barral_ELNET1_MVC.Controllers
                 return View(model);
             }
 
+            if (user.Role == "GuestInactive")
+            {
+                ModelState.AddModelError(string.Empty, "Your account has been deactivated. Please contact an administrator.");
+                return View(model);
+            }
+
             // Build the Claims list — this IS the user's identity inside the cookie
             var claims = new List<Claim>
         {
@@ -62,6 +68,10 @@ namespace Barral_ELNET1_MVC.Controllers
                 principal,
                 authProps);
 
+            if (user.Role == "Guest")
+            {
+                return RedirectToAction("Guest", "Dashboard");
+            }
             return RedirectToAction("Index", "Student");
         }
 

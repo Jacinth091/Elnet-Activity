@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 namespace Barral_ELNET1_MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class TransactionController : Controller
     {
         private readonly AppDbContext _context;
@@ -17,7 +17,7 @@ namespace Barral_ELNET1_MVC.Controllers
             _context = context;
         }
         // ── GET /Transaction/Index ─────────────────────────────────────────────
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Guest")]
         public async Task<IActionResult> Index(string? searchDesc, string? filterDate)
         {
             var query = _context.Transactions
@@ -38,6 +38,7 @@ namespace Barral_ELNET1_MVC.Controllers
         }
 
         // ── GET /Transaction/Create ────────────────────────────────────────────
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewBag.Students = new SelectList(_context.Students.OrderBy(s => s.Name), "Id", "Name");
@@ -47,6 +48,7 @@ namespace Barral_ELNET1_MVC.Controllers
         // ── POST /Transaction/Create ───────────────────────────────────────────
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Transaction transaction)
         {
             if (!ModelState.IsValid)
