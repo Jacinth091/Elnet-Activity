@@ -1,0 +1,104 @@
+@model Barral_ELNET1_MVC.ViewModels.GuestDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div style="max-width: 1200px; margin: 0 auto;">
+
+    <!-- Page Header -->
+    <div class="d-flex align-items-center mb-4" style="gap: 1rem;">
+        <div style="width: 40px; height: 40px; background-color: var(--color-surface); border: 1.5px solid var(--color-border-card); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-speedometer2" style="font-size: 1.1rem; color: var(--color-text-primary);"></i>
+        </div>
+        <div>
+            <h1 style="font-size: 1.375rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 0;">Overview</h1>
+            <p style="font-size: 0.8125rem; color: var(--color-text-secondary); margin-bottom: 0;">Read-only view of transaction data</p>
+        </div>
+    </div>
+
+    <!-- ── Stat Cards ─────────────────────────────────────────── -->
+    <div class="row g-3 mb-5">
+
+        <!-- Total Transactions -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-label">Total Transactions</div>
+                <div class="stat-value">@Model.TotalTransactions.ToString("N0")</div>
+            </div>
+        </div>
+
+        <!-- Total Amount -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-label">Total Amount</div>
+                <div class="stat-value">@Model.TotalAmount.ToString("C")</div>
+            </div>
+        </div>
+
+        <!-- Average Transaction -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-label">Average Transaction</div>
+                <div class="stat-value">@Model.AverageAmount.ToString("C")</div>
+            </div>
+        </div>
+
+        <!-- Latest Transaction Date -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-label">Latest Transaction</div>
+                <div class="stat-value" style="font-size: 1.25rem;">
+                    @(Model.LatestTransactionDate.HasValue
+                        ? Model.LatestTransactionDate.Value.ToString("MMM dd, yyyy")
+                        : "—")
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── Recent Transactions Table ─────────────────────────── -->
+    <div class="mb-2">
+        <h2 style="font-size: 1.0625rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 1rem;">
+            Recent Transactions
+            <span class="ms-2" style="font-size: 0.8rem; font-weight: 400; color: var(--color-text-muted);">Last 10</span>
+        </h2>
+    </div>
+
+    @if (!Model.RecentTransactions.Any())
+    {
+        <div class="card" style="text-align: center; padding: 3rem 1.5rem; color: var(--color-text-muted);">
+            <i class="bi bi-receipt fs-2 mb-2 d-block"></i>
+            <p class="mb-0" style="font-size: 0.9375rem;">No transactions found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-container">
+            <table class="table table-hover" style="border-collapse: separate; border-spacing: 0; margin-bottom: 0;">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.RecentTransactions)
+                    {
+                        <tr>
+                            <td style="font-weight: 500; color: var(--color-text-primary);">#@t.Id</td>
+                            <td>@t.Date.ToString("MMM dd, yyyy")</td>
+                            <td style="max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                @t.Description
+                            </td>
+                            <td style="font-weight: 600; color: var(--color-text-primary);">@t.Amount.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+</div>
