@@ -1,4 +1,4 @@
-using Barral_ELNET1_MVC.Data;
+﻿using Barral_ELNET1_MVC.Data;
 using Barral_ELNET1_MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,7 @@ namespace Barral_ELNET1_MVC.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Guest")]
         public async Task<IActionResult> Index(string? searchTerm, string? courseFilter)
         {
             var query = _context.Students.AsQueryable();
