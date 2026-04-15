@@ -1,0 +1,189 @@
+@model List<Barral_ELNET1_MVC.Models.User>
+@using Barral_ELNET1_MVC.ViewModels
+@{
+    ViewData["Title"] = "Manage Guests";
+    var createForm = ViewBag.CreateForm as Barral_ELNET1_MVC.Models.User ?? new Barral_ELNET1_MVC.Models.User();
+}
+
+<!-- Page Header -->
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center" style="gap: 1rem;">
+        <div style="width: 40px; height: 40px; background-color: var(--color-surface); border: 1.5px solid var(--color-border-card); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-people" style="font-size: 1.1rem; color: var(--color-text-primary);"></i>
+        </div>
+        <div>
+            <h1 style="font-size: 1.375rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 0;">Manage Guests</h1>
+            <p style="font-size: 0.8125rem; color: var(--color-text-secondary); margin-bottom: 0;">Create and manage guest portal accounts</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="row g-4 align-items-start">
+
+    <!-- ── Guest Table (left / main) ───────────────────────────── -->
+    <div class="col-12 col-lg-7 col-xl-8">
+        <div class="card" style="padding: 0;">
+
+            <div style="padding: 1.5rem 1.5rem 1rem;">
+                <h2 style="font-size: 1rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 0;">
+                    Guest Accounts
+                    <span class="ms-2" style="font-size: 0.8rem; font-weight: 400; color: var(--color-text-muted);">@Model.Count total</span>
+                </h2>
+            </div>
+            <hr style="margin: 0; border-color: var(--color-border-divider);">
+
+            @if (!Model.Any())
+            {
+                <div style="padding: 3rem 1.5rem; text-align: center; color: var(--color-text-muted);">
+                    <i class="bi bi-people fs-2 mb-2 d-block"></i>
+                    <p class="mb-0" style="font-size: 0.9375rem;">No guest accounts yet. Create one using the form.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover" style="border-collapse: separate; border-spacing: 0; margin-bottom: 0;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var guest in Model)
+                            {
+                                <tr>
+                                    <td style="color: var(--color-text-muted); font-size: 0.8125rem;">#@guest.Id</td>
+                                    <td style="font-weight: 500; color: var(--color-text-primary);">@guest.Name</td>
+                                    <td style="font-size: 0.875rem;">@guest.Email</td>
+                                    <td>
+                                        @if (guest.Role == "Guest")
+                                        {
+                                            <span class="status-badge active">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge inactive">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (guest.Role == "Guest")
+                                        {
+                                            <form asp-controller="Admin" asp-action="DeactivateGuest" asp-route-id="@guest.Id" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn-app-secondary" style="padding: 5px 14px; font-size: 0.8125rem;">
+                                                    Deactivate
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-controller="Admin" asp-action="ActivateGuest" asp-route-id="@guest.Id" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn-app-secondary" style="padding: 5px 14px; font-size: 0.8125rem;">
+                                                    Activate
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- ── Create Guest Card (right / sidebar) ────────────────── -->
+    <div class="col-12 col-lg-5 col-xl-4">
+        <div class="card">
+            <div class="card-header" style="padding-top: 0; margin-bottom: 1.25rem;">
+                <h2 style="font-size: 1rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 0;">
+                    <i class="bi bi-person-plus me-2"></i>Create Guest Account
+                </h2>
+            </div>
+
+            <form asp-controller="Admin" asp-action="CreateGuest" method="post" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" style="background: var(--color-validation-bg); color: var(--color-validation-text); border-radius: 6px; padding: 8px 12px; font-size: 0.875rem; margin-bottom: 1rem;"></div>
+
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label asp-for="@createForm.Name" class="form-label">Full Name</label>
+                    <input asp-for="@createForm.Name" class="form-control" placeholder="e.g. Juan dela Cruz" id="create-Name" name="Name" />
+                    <span asp-validation-for="@createForm.Name"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label asp-for="@createForm.Email" class="form-label">Email</label>
+                    <input asp-for="@createForm.Email" class="form-control" placeholder="email@example.com" id="create-Email" name="Email" />
+                    <span asp-validation-for="@createForm.Email"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label asp-for="@createForm.Password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input asp-for="@createForm.Password" class="form-control" placeholder="Min. 8 characters" id="create-Password" name="Password" type="password" />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('create-Password', this)" style="border-color: var(--color-border-input);">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="@createForm.Password"></span>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-4">
+                    <label asp-for="@createForm.ConfirmPassword" class="form-label">Confirm Password</label>
+                    <div class="input-group">
+                        <input asp-for="@createForm.ConfirmPassword" class="form-control" placeholder="Re-enter password" id="create-ConfirmPassword" name="ConfirmPassword" type="password" />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('create-ConfirmPassword', this)" style="border-color: var(--color-border-input);">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="@createForm.ConfirmPassword"></span>
+                </div>
+
+                <hr style="border-color: var(--color-border-divider); margin-bottom: 1.25rem;">
+
+                <!-- Actions -->
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn-app-primary flex-grow-1">
+                        Create Account
+                    </button>
+                    <button type="reset" class="btn-app-cancel">
+                        Clear
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function togglePasswordVisibility(inputId, button) {
+            var input = document.getElementById(inputId);
+            var icon = button.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+    </script>
+}
