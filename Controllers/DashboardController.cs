@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Barral_ELNET1_MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly AppDbContext _context;
@@ -16,8 +16,9 @@ namespace Barral_ELNET1_MVC.Controllers
             _context = context;
         }
 
-        // GET: /Dashboard/Index
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        // GET: /Dashboard/Index (Admin Dashboard)
+        [Authorize(Roles = "Admin")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index(string? searchDesc, DateTime? filterDate)
         {
             var today = DateTime.Today;
@@ -100,6 +101,37 @@ namespace Barral_ELNET1_MVC.Controllers
             };
 
             return View("Dashboard", model);
+        }
+
+        // GET: /Dashboard/Guest (Guest Dashboard)
+        [Authorize(Roles = "Guest")]
+        public async Task<IActionResult> Guest()
+        {
+            var totalTransactions = await _context.Transactions.CountAsync();
+            var totalAmount = await _context.Transactions.SumAsync(t => (decimal?)t.Amount) ?? 0m;
+            var averageAmount = totalTransactions > 0
+                ? await _context.Transactions.AverageAsync(t => (decimal?)t.Amount) ?? 0m
+                : 0m;
+            var latestDate = await _context.Transactions
+                .MaxAsync(t => (DateTime?)t.Date);
+
+            var recentTransactions = await _context.Transactions
+                .AsNoTracking()
+                .OrderByDescending(t => t.Date)
+                .ThenByDescending(t => t.Id)
+                .Take(10)
+                .ToListAsync();
+
+            var model = new GuestDashboardViewModel
+            {
+                TotalTransactions = totalTransactions,
+                TotalAmount = totalAmount,
+                AverageAmount = Math.Round(averageAmount, 2),
+                LatestTransactionDate = latestDate,
+                RecentTransactions = recentTransactions
+            };
+
+            return View(model);
         }
     }
 }
