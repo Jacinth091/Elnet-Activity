@@ -23,12 +23,24 @@
     <!-- Navigation -->
     <ul class="nav flex-column mb-auto px-2">
         <li class="nav-item">
-            <a asp-controller="Dashboard" asp-action="Index" 
-               class="nav-link-portal @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")"
-               title="Dashboard">
-                <i class="bi bi-speedometer2 icon"></i>
-                <span class="ms-3 label-visible">Dashboard</span>
-            </a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Dashboard" asp-action="Index" 
+                   class="nav-link-portal @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                   title="Dashboard">
+                    <i class="bi bi-speedometer2 icon"></i>
+                    <span class="ms-3 label-visible">Dashboard</span>
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Dashboard" asp-action="Guest" 
+                   class="nav-link-portal @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" && ViewContext.RouteData.Values["action"]?.ToString() == "Guest" ? "active" : "")"
+                   title="Dashboard">
+                    <i class="bi bi-speedometer2 icon"></i>
+                    <span class="ms-3 label-visible">Dashboard</span>
+                </a>
+            }
         </li>
         <li class="nav-item">
             <a asp-controller="Student" asp-action="Index" 
@@ -46,14 +58,25 @@
                 <span class="ms-3 label-visible">Transactions</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a asp-controller="Admin" asp-action="Index" 
-               class="nav-link-portal @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")"
-               title="Manage Admins">
-                <i class="bi bi-person-gear icon"></i>
-                <span class="ms-3 label-visible">Manage Admins</span>
-            </a>
-        </li>
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a asp-controller="Admin" asp-action="Index" 
+                   class="nav-link-portal @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                   title="Manage Admins">
+                    <i class="bi bi-person-gear icon"></i>
+                    <span class="ms-3 label-visible">Manage Admins</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-controller="Admin" asp-action="Guests" 
+                   class="nav-link-portal @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["action"]?.ToString() == "Guests" ? "active" : "")"
+                   title="Manage Guests">
+                    <i class="bi bi-people icon"></i>
+                    <span class="ms-3 label-visible">Manage Guests</span>
+                </a>
+            </li>
+        }
     </ul>
 
     <!-- Footer -->
@@ -64,7 +87,7 @@
             </div>
             <div class="ms-2 label-visible overflow-hidden">
                 <p class="mb-0 text-white small fw-bold text-truncate">@User.Identity?.Name</p>
-                <p class="mb-0 text-muted" style="font-size: 11px;">Admin Account</p>
+                <p class="mb-0 text-muted" style="font-size: 11px;">@(User.IsInRole("Admin") ? "Admin Account" : "Guest Account")</p>
             </div>
         </div>
         
