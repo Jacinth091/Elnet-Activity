@@ -11,9 +11,6 @@
         A streamlined, role-based platform for managing student records and tracking financial transactions with absolute precision.
     </p>
     <div class="d-flex justify-content-center gap-3">
-        <a asp-controller="Student" asp-action="Index" class="btn btn-primary px-4 py-2">
-            Explore Directory
-        </a>
         @if (User.Identity?.IsAuthenticated != true)
         {
             <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary px-4 py-2">
