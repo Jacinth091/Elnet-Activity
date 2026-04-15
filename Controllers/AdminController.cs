@@ -38,6 +38,11 @@ namespace Barral_ELNET1_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(User model)
         {
+            if (string.IsNullOrWhiteSpace(model.Password))
+            {
+                ModelState.AddModelError("Password", "Password is required for new accounts.");
+            }
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -92,13 +97,16 @@ namespace Barral_ELNET1_MVC.Controllers
                 return NotFound();
             }
 
-            // Remove password validation if it's not being changed
-            if (string.IsNullOrWhiteSpace(model.Password) && string.IsNullOrWhiteSpace(model.ConfirmPassword))
+            // Explicitly remove password validation if the fields are left blank
+            if (string.IsNullOrWhiteSpace(model.Password))
             {
                 ModelState.Remove("Password");
+            }
+            if (string.IsNullOrWhiteSpace(model.ConfirmPassword))
+            {
                 ModelState.Remove("ConfirmPassword");
             }
-            
+
             if (ModelState.IsValid)
             {
                 userToUpdate.Name = model.Name;
@@ -159,6 +167,103 @@ namespace Barral_ELNET1_MVC.Controllers
                 TempData["Error"] = "Admin not found or user is not an admin.";
             }
             return RedirectToAction(nameof(Index));
+        }
+        // ──────────────────────────────────────────────────────────────────
+        // GUEST MANAGEMENT
+        // ──────────────────────────────────────────────────────────────────
+
+        // GET: /Admin/Guests
+        [HttpGet]
+        public async Task<IActionResult> Guests()
+        {
+            var guests = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.Role == "Guest" || u.Role == "GuestInactive")
+                .OrderByDescending(u => u.Id)
+                .ToListAsync();
+
+            ViewBag.CreateForm = new User { BirthDate = DateOnly.FromDateTime(DateTime.Today) };
+            return View(guests);
+        }
+
+        // POST: /Admin/CreateGuest
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateGuest(User model)
+        {
+            // We ignore Age and BirthDate validation for guests since they might not enter them on the form
+            ModelState.Remove("Age");
+            ModelState.Remove("BirthDate");
+
+            if (string.IsNullOrWhiteSpace(model.Password))
+            {
+                ModelState.AddModelError("Password", "Password is required for new accounts.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var guests = await _context.Users.AsNoTracking()
+                    .Where(u => u.Role == "Guest" || u.Role == "GuestInactive")
+                    .OrderByDescending(u => u.Id).ToListAsync();
+                ViewBag.CreateForm = model;
+                return View("Guests", guests);
+            }
+
+            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+            {
+                ModelState.AddModelError("Email", "An account with this email already exists.");
+                var guests = await _context.Users.AsNoTracking()
+                    .Where(u => u.Role == "Guest" || u.Role == "GuestInactive")
+                    .OrderByDescending(u => u.Id).ToListAsync();
+                ViewBag.CreateForm = model;
+                return View("Guests", guests);
+            }
+
+            var guest = new User
+            {
+                Name = model.Name,
+                Email = model.Email,
+                Role = "Guest",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password),
+                Age = 25, // Safe value for SQL Server tracking purposes
+                BirthDate = new DateOnly(2000, 1, 1) // Safe value
+            };
+
+            _context.Users.Add(guest);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"Guest account for \"{model.Name}\" created successfully.";
+            return RedirectToAction(nameof(Guests));
+        }
+
+        // POST: /Admin/DeactivateGuest/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeactivateGuest(int id)
+        {
+            var guest = await _context.Users.FindAsync(id);
+            if (guest != null && guest.Role == "Guest")
+            {
+                guest.Role = "GuestInactive";
+                await _context.SaveChangesAsync();
+                TempData["Success"] = $"\"{guest.Name}\" has been deactivated.";
+            }
+            return RedirectToAction(nameof(Guests));
+        }
+
+        // POST: /Admin/ActivateGuest/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ActivateGuest(int id)
+        {
+            var guest = await _context.Users.FindAsync(id);
+            if (guest != null && guest.Role == "GuestInactive")
+            {
+                guest.Role = "Guest";
+                await _context.SaveChangesAsync();
+                TempData["Success"] = $"\"{guest.Name}\" has been activated.";
+            }
+            return RedirectToAction(nameof(Guests));
         }
     }
 }

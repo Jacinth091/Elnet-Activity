@@ -81,6 +81,7 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        // Toggle password visibility
         document.querySelectorAll('.toggle-password-icon').forEach(icon => {
             icon.addEventListener('click', function () {
                 const input = this.previousElementSibling;
@@ -92,6 +93,24 @@
                     input.type = 'password';
                     this.classList.remove('bi-eye');
                     this.classList.add('bi-eye-slash');
+                }
+            });
+        });
+
+        // "Surrogate" validation bypass: If password fields are blank, don't let client-side validation block us.
+        $(document).ready(function () {
+            const $form = $('form');
+            const $password = $('#Password');
+            const $confirm = $('#ConfirmPassword');
+
+            $form.on('submit', function (e) {
+                // If the user hasn't typed anything in the password fields, 
+                // remove the validation rules for them so they don't block submission.
+                if ($password.val() === '') {
+                    $password.attr('data-val', 'false');
+                    // Re-parse the form validation
+                    $form.removeData('validator').removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse($form);
                 }
             });
         });
