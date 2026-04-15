@@ -1,6 +1,6 @@
 @model Barral_ELNET1_MVC.ViewModels.LoginViewModel
 @{
-    ViewData["Title"] = "Admin Login";
+    ViewData["Title"] = "Portal Login";
 }
 
 <div class="container py-5">
@@ -9,7 +9,7 @@
             <div class="text-center mb-4">
                 <i class="bi bi-mortarboard-fill text-secondary-muted" style="font-size: 3.5rem;"></i>
                 <h2 class="page-title mt-3">Portal Login</h2>
-                <p class="text-secondary-muted small">Enter your credentials to access admin features</p>
+                <p class="text-secondary-muted small">Enter your credentials to sign in</p>
             </div>
 
             <div class="card p-4">
@@ -30,7 +30,10 @@
                         <label asp-for="Password" class="form-label fw-bold small text-navy">Password</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-key text-secondary-muted"></i></span>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                            <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" id="loginPassword" />
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('loginPassword', this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
                         </div>
                         <span asp-validation-for="Password" class="text-danger x-small"></span>
                     </div>
@@ -59,4 +62,19 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        function togglePasswordVisibility(inputId, button) {
+            var input = document.getElementById(inputId);
+            var icon = button.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+    </script>
 }
